@@ -10,17 +10,72 @@
       position: fixed;
       width: 100%;
       height: 100%;
-      background: #020617;
+      background: #f6f8fa;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
-      font-size: 20px;
+      font-size: 18px;
       z-index: 999;
     }
 
     #app {
       display: none;
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .anime-item {
+      display: flex;
+      gap: 10px;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .anime-item img {
+      width: 70px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .anime-info {
+      flex: 1;
+    }
+
+    .anime-actions button {
+      margin-right: 5px;
+      padding: 5px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-delete {
+      background: red;
+      color: white;
+    }
+
+    .btn-episode {
+      background: #2e51a2;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -33,37 +88,50 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <h2>Admin</h2>
+    <h2>Admin Panel</h2>
     <button onclick="logout()">Logout</button>
   </div>
 
   <!-- MAIN -->
   <div class="main">
 
-    <h1>Dashboard</h1>
-
-    <!-- FORM ANIME -->
-    <div class="form-card">
-      <h3>Tambah Anime</h3>
-      <input id="title" placeholder="Judul Anime">
-      <input id="desc" placeholder="Deskripsi">
-      <input id="day" placeholder="Hari rilis">
-      <input id="coverUrl" placeholder="URL Cover (optional)">
-      <input type="file" id="coverFile">
-      <button id="addAnime">Tambah Anime</button>
+    <div class="header">
+      <h1>Dashboard</h1>
+      <p>Manage your anime content</p>
     </div>
 
-    <!-- FORM EPISODE -->
-    <div class="form-card">
-      <h3>Tambah Episode</h3>
-      <input id="animeId" placeholder="Anime ID">
-      <input id="episode" placeholder="Episode ke">
-      <input id="link" placeholder="Download link">
-      <button id="addEpisode">Tambah Episode</button>
+    <!-- FORM GRID -->
+    <div class="grid-2">
+
+      <!-- ADD ANIME -->
+      <div class="form-card">
+        <h3>Tambah Anime</h3>
+
+        <input id="title" placeholder="Judul Anime">
+        <input id="desc" placeholder="Deskripsi">
+        <input id="day" placeholder="Hari rilis">
+
+        <input id="coverUrl" placeholder="URL Cover">
+        <input type="file" id="coverFile">
+
+        <button id="addAnime">Tambah Anime</button>
+      </div>
+
+      <!-- ADD EPISODE -->
+      <div class="form-card">
+        <h3>Tambah Episode</h3>
+
+        <input id="animeId" placeholder="Anime ID">
+        <input id="episode" placeholder="Episode ke">
+        <input id="link" placeholder="Download link">
+
+        <button id="addEpisode">Tambah Episode</button>
+      </div>
+
     </div>
 
     <!-- LIST -->
-    <h2>Daftar Anime</h2>
+    <h2 style="margin-top:20px;">Daftar Anime</h2>
     <div id="animeList"></div>
 
   </div>

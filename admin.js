@@ -102,28 +102,28 @@ document.getElementById('addEpisode').onclick = async () => {
 // LOAD ANIME
 // ==============================
 async function loadAnime() {
-  const { data, error } = await supabase.from('anime').select('*')
+  const { data } = await supabase.from('anime').select('*')
 
   const container = document.getElementById('animeList')
   container.innerHTML = ''
 
-  if (error) {
-    container.innerHTML = 'Gagal load data'
-    return
-  }
-
   data.forEach(a => {
     const div = document.createElement('div')
-    div.className = 'card'
+    div.className = 'anime-item'
 
     div.innerHTML = `
-      <h3>${a.title}</h3>
-      <img src="${a.cover}" width="120">
-      <p>${a.description || ''}</p>
-      <small>ID: ${a.id}</small><br><br>
+      <img src="${a.cover}" onerror="this.src='https://via.placeholder.com/100x140'">
 
-      <button onclick="deleteAnime('${a.id}')">Hapus</button>
-      <button onclick="showEpisodes('${a.id}')">Episode</button>
+      <div class="anime-info">
+        <strong>${a.title}</strong><br>
+        <small>${a.description || ''}</small><br>
+        <small>ID: ${a.id}</small>
+      </div>
+
+      <div class="anime-actions">
+        <button class="btn-delete" onclick="deleteAnime('${a.id}')">Hapus</button>
+        <button class="btn-episode" onclick="showEpisodes('${a.id}')">Episode</button>
+      </div>
 
       <div id="ep-${a.id}"></div>
     `
