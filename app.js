@@ -82,12 +82,15 @@ function render(animeList) {
     const div = document.createElement('div')
     div.className = 'card'
 
-    div.innerHTML = `
-      <img src="${anime.cover}" 
-           onerror="this.src='https://via.placeholder.com/300x400?text=No+Image'">
-      <h3>${anime.title}</h3>
-      <a href="detail.html?id=${anime.id}">Lihat</a>
-    `
+div.innerHTML = `
+  <img src="${anime.cover}" 
+       onerror="this.src='https://via.placeholder.com/300x400'">
+
+  <div class="card-content">
+    <h3>${anime.title}</h3>
+    <a href="detail.html?id=${anime.id}">Detail</a>
+  </div>
+`
 
     list.appendChild(div)
   })
