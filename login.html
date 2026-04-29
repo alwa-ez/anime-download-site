@@ -1,4 +1,109 @@
-<input id="email">
-<input id="password">
-<button id="loginBtn">Login</button>
-<script type="module" src="login.js"></script>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Admin</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #020617, #0f172a);
+    }
+
+    .login-box {
+      width: 350px;
+      background: #020617;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .login-box h1 {
+      margin-bottom: 20px;
+      color: cyan;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+      background: #0f172a;
+      color: white;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: cyan;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-box button:hover {
+      background: #22d3ee;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h1>Admin Login</h1>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button id="loginBtn">Login</button>
+
+  <div id="errorMsg" class="error"></div>
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js'
+
+const btn = document.getElementById('loginBtn')
+const errorMsg = document.getElementById('errorMsg')
+
+btn.onclick = async () => {
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+
+  errorMsg.innerText = ''
+
+  if (!email || !password) {
+    errorMsg.innerText = 'Email dan password wajib diisi'
+    return
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    errorMsg.innerText = 'Login gagal: ' + error.message
+  } else {
+    window.location.href = '/admin.html'
+  }
+}
+</script>
+
+</body>
+</html>
