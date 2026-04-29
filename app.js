@@ -28,11 +28,34 @@ if (totalEl) {
 // ==============================
 // 2. REALTIME ONLINE VISITOR
 // ==============================
+// ==============================
+// REALTIME ONLINE VISITOR (FIXED)
+// ==============================
+
 const channel = supabase.channel('online-users', {
   config: {
     presence: {
       key: Math.random().toString(36)
     }
+  }
+})
+
+// ✅ PASANG LISTENER DULU
+channel.on('presence', { event: 'sync' }, () => {
+  const state = channel.presenceState()
+  const onlineUsers = Object.keys(state).length
+
+  if (onlineEl) {
+    onlineEl.innerText = `🟢 Online Now: ${onlineUsers}`
+  }
+})
+
+// ✅ BARU SUBSCRIBE
+channel.subscribe(async (status) => {
+  if (status === 'SUBSCRIBED') {
+    await channel.track({
+      online_at: new Date().toISOString()
+    })
   }
 })
 
