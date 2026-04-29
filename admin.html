@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Admin Panel</h1>
+
+  <!-- ADD ANIME -->
+  <h2>Tambah Anime</h2>
+  <input id="title" placeholder="Judul Anime">
+  <input id="cover" placeholder="URL Cover">
+  <input id="desc" placeholder="Deskripsi">
+  <input id="day" placeholder="Hari Rilis">
+  <button id="addAnime">Tambah</button>
+
+  <hr>
+
+  <!-- ADD EPISODE -->
+  <h2>Tambah Episode</h2>
+  <input id="animeId" placeholder="Anime ID">
+  <input id="episode" placeholder="Episode ke">
+  <input id="link" placeholder="Download link">
+  <button id="addEpisode">Tambah Episode</button>
+
+  <hr>
+
+  <!-- LIST ANIME -->
+  <h2>List Anime</h2>
+  <div id="animeList"></div>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
