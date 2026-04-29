@@ -2,33 +2,70 @@ import { supabase } from './supabase.js'
 
 const list = document.getElementById('animeList')
 const searchInput = document.getElementById('search')
-const visitorEl = document.getElementById('visitor')
+
+// visitor UI
+const totalEl = document.getElementById('totalVisitor')
+const onlineEl = document.getElementById('onlineVisitor')
 
 // ==============================
-// VISITOR TRACK
+// 1. TOTAL VISITOR (DATABASE)
 // ==============================
 try {
   await supabase.from('visitors').insert([{}])
 } catch (e) {
-  console.error('Visitor error:', e.message)
+  console.error('Insert visitor error:', e.message)
+}
+
+// ambil total
+const { count } = await supabase
+  .from('visitors')
+  .select('*', { count: 'exact', head: true })
+
+if (totalEl) {
+  totalEl.innerText = `👁️ Total Visitors: ${count}`
 }
 
 // ==============================
-// GET DATA
+// 2. REALTIME ONLINE VISITOR
+// ==============================
+const channel = supabase.channel('online-users', {
+  config: {
+    presence: {
+      key: Math.random().toString(36)
+    }
+  }
+})
+
+// saat connect
+channel.subscribe(async (status) => {
+  if (status === 'SUBSCRIBED') {
+    await channel.track({
+      online_at: new Date().toISOString()
+    })
+  }
+})
+
+// listen perubahan
+channel.on('presence', { event: 'sync' }, () => {
+  const state = channel.presenceState()
+  const onlineUsers = Object.keys(state).length
+
+  if (onlineEl) {
+    onlineEl.innerText = `🟢 Online Now: ${onlineUsers}`
+  }
+})
+
+// ==============================
+// 3. GET ANIME
 // ==============================
 const { data, error } = await supabase.from('anime').select('*')
 
 if (error) {
-  console.error(error.message)
-  list.innerHTML = '<h2>Gagal load data</h2>'
-}
-
-if (!data || data.length === 0) {
-  list.innerHTML = '<h2>Data kosong</h2>'
+  list.innerHTML = '<h2>Error load data</h2>'
 }
 
 // ==============================
-// FUNCTION RENDER
+// 4. RENDER FUNCTION
 // ==============================
 function render(animeList) {
   list.innerHTML = ''
@@ -48,11 +85,11 @@ function render(animeList) {
   })
 }
 
-// INIT
+// init
 if (data) render(data)
 
 // ==============================
-// SEARCH
+// 5. SEARCH
 // ==============================
 if (searchInput) {
   searchInput.addEventListener('input', () => {
@@ -64,15 +101,4 @@ if (searchInput) {
 
     render(filtered)
   })
-}
-
-// ==============================
-// VISITOR COUNT
-// ==============================
-if (visitorEl) {
-  const { count } = await supabase
-    .from('visitors')
-    .select('*', { count: 'exact', head: true })
-
-  visitorEl.innerText = `Visitors: ${count}`
 }
