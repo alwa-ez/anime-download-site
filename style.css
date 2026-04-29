@@ -1,0 +1,34 @@
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+}
+
+.card {
+  background: #1e293b;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+a {
+  color: cyan;
+  text-decoration: none;
+}
