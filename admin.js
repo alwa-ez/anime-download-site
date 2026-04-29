@@ -1,39 +1,36 @@
 import { supabase } from './supabase.js'
 
-const animeList = document.getElementById('animeList')
+// ==============================
+// AUTH CHECK
+// ==============================
+const { data: { user } } = await supabase.auth.getUser()
+
+if (!user) {
+  location.href = '/login.html'
+}
+
+// logout
+window.logout = async () => {
+  await supabase.auth.signOut()
+  location.href = '/login.html'
+}
 
 // ==============================
-// LOAD ANIME
+// UPLOAD FILE FUNCTION
 // ==============================
-async function loadAnime() {
-  animeList.innerHTML = 'Loading...'
+async function uploadFile(file) {
+  const fileName = Date.now() + '-' + file.name
 
-  const { data, error } = await supabase.from('anime').select('*')
+  const { data, error } = await supabase.storage
+    .from('covers')
+    .upload(fileName, file)
 
   if (error) {
-    animeList.innerHTML = 'Error load data'
-    return
+    alert('Upload gagal')
+    return null
   }
 
-  animeList.innerHTML = ''
-
-  data.forEach(anime => {
-    const div = document.createElement('div')
-    div.className = 'card'
-
-    div.innerHTML = `
-      <h3>${anime.title}</h3>
-      <p>${anime.description}</p>
-      <small>ID: ${anime.id}</small><br><br>
-
-      <button onclick="deleteAnime('${anime.id}')">Hapus</button>
-      <button onclick="showEpisodes('${anime.id}')">Lihat Episode</button>
-
-      <div id="ep-${anime.id}"></div>
-    `
-
-    animeList.appendChild(div)
-  })
+  return `${supabaseUrl}/storage/v1/object/public/covers/${fileName}`
 }
 
 // ==============================
@@ -41,34 +38,68 @@ async function loadAnime() {
 // ==============================
 document.getElementById('addAnime').onclick = async () => {
   const title = document.getElementById('title').value
-  const cover = document.getElementById('cover').value
   const desc = document.getElementById('desc').value
   const day = document.getElementById('day').value
 
-  const { error } = await supabase.from('anime').insert([{
+  let cover = document.getElementById('coverUrl').value
+
+  const file = document.getElementById('coverFile').files[0]
+
+  // kalau upload file
+  if (file) {
+    const fileName = Date.now() + '-' + file.name
+
+    const { error } = await supabase.storage
+      .from('covers')
+      .upload(fileName, file)
+
+    if (!error) {
+      cover = `${supabase.storageUrl}/object/public/covers/${fileName}`
+    }
+  }
+
+  await supabase.from('anime').insert([{
     title,
-    cover,
     description: desc,
-    release_day: day
+    release_day: day,
+    cover
   }])
 
-  if (error) {
-    alert('Gagal tambah anime')
-  } else {
-    alert('Anime ditambahkan')
-    loadAnime()
-  }
+  alert('Anime ditambahkan')
+  loadAnime()
 }
 
 // ==============================
-// DELETE ANIME
+// LOAD ANIME
+// ==============================
+async function loadAnime() {
+  const { data } = await supabase.from('anime').select('*')
+
+  const container = document.getElementById('animeList')
+  container.innerHTML = ''
+
+  data.forEach(a => {
+    const div = document.createElement('div')
+    div.className = 'card'
+
+    div.innerHTML = `
+      <h3>${a.title}</h3>
+      <img src="${a.cover}" width="100">
+      <p>${a.description}</p>
+
+      <button onclick="deleteAnime('${a.id}')">Hapus</button>
+    `
+
+    container.appendChild(div)
+  })
+}
+
+// ==============================
+// DELETE
 // ==============================
 window.deleteAnime = async (id) => {
-  if (!confirm('Hapus anime ini?')) return
-
   await supabase.from('anime').delete().eq('id', id)
   await supabase.from('episodes').delete().eq('anime_id', id)
-
   loadAnime()
 }
 
@@ -80,48 +111,13 @@ document.getElementById('addEpisode').onclick = async () => {
   const episode_number = parseInt(document.getElementById('episode').value)
   const download_link = document.getElementById('link').value
 
-  const { error } = await supabase.from('episodes').insert([{
+  await supabase.from('episodes').insert([{
     anime_id,
     episode_number,
     download_link
   }])
 
-  if (error) {
-    alert('Gagal tambah episode')
-  } else {
-    alert('Episode ditambahkan')
-  }
-}
-
-// ==============================
-// SHOW EPISODES
-// ==============================
-window.showEpisodes = async (anime_id) => {
-  const container = document.getElementById(`ep-${anime_id}`)
-
-  const { data } = await supabase
-    .from('episodes')
-    .select('*')
-    .eq('anime_id', anime_id)
-
-  container.innerHTML = '<h4>Episode:</h4>'
-
-  data.forEach(ep => {
-    const el = document.createElement('div')
-    el.innerHTML = `
-      Episode ${ep.episode_number}
-      <button onclick="deleteEpisode('${ep.id}', '${anime_id}')">Hapus</button>
-    `
-    container.appendChild(el)
-  })
-}
-
-// ==============================
-// DELETE EPISODE
-// ==============================
-window.deleteEpisode = async (id, anime_id) => {
-  await supabase.from('episodes').delete().eq('id', id)
-  showEpisodes(anime_id)
+  alert('Episode ditambahkan')
 }
 
 // ==============================

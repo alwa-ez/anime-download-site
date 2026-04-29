@@ -6,31 +6,49 @@
 </head>
 <body>
 
-<div class="container">
-  <h1>Admin Panel</h1>
+<div style="display:flex">
 
-  <!-- ADD ANIME -->
-  <h2>Tambah Anime</h2>
-  <input id="title" placeholder="Judul Anime">
-  <input id="cover" placeholder="URL Cover">
-  <input id="desc" placeholder="Deskripsi">
-  <input id="day" placeholder="Hari Rilis">
-  <button id="addAnime">Tambah</button>
+  <!-- SIDEBAR -->
+  <div style="width:200px; background:#020617; padding:20px;">
+    <h2>Admin</h2>
+    <button onclick="logout()">Logout</button>
+  </div>
 
-  <hr>
+  <!-- CONTENT -->
+  <div class="container">
 
-  <!-- ADD EPISODE -->
-  <h2>Tambah Episode</h2>
-  <input id="animeId" placeholder="Anime ID">
-  <input id="episode" placeholder="Episode ke">
-  <input id="link" placeholder="Download link">
-  <button id="addEpisode">Tambah Episode</button>
+    <h1>Dashboard</h1>
 
-  <hr>
+    <!-- ADD ANIME -->
+    <div class="card">
+      <h2>Tambah Anime</h2>
 
-  <!-- LIST ANIME -->
-  <h2>List Anime</h2>
-  <div id="animeList"></div>
+      <input id="title" placeholder="Judul">
+      <input id="desc" placeholder="Deskripsi">
+      <input id="day" placeholder="Hari rilis">
+
+      <input id="coverUrl" placeholder="URL Cover (optional)">
+      <input type="file" id="coverFile">
+
+      <button id="addAnime">Tambah</button>
+    </div>
+
+    <!-- ADD EPISODE -->
+    <div class="card">
+      <h2>Tambah Episode</h2>
+
+      <input id="animeId" placeholder="Anime ID">
+      <input id="episode" placeholder="Episode">
+      <input id="link" placeholder="Download link">
+
+      <button id="addEpisode">Tambah</button>
+    </div>
+
+    <!-- LIST -->
+    <div id="animeList"></div>
+
+  </div>
+
 </div>
 
 <script type="module" src="admin.js"></script>
