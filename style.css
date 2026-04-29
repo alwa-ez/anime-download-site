@@ -1,34 +1,38 @@
 body {
-  font-family: Arial;
-  background: #0f172a;
+  font-family: 'Segoe UI', sans-serif;
+  background: #020617;
   color: white;
-  margin: 0;
 }
 
-.container {
-  width: 90%;
-  margin: auto;
+h1 {
+  margin-bottom: 20px;
 }
 
 .card {
-  background: #1e293b;
-  padding: 10px;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  height: 250px;
+  object-fit: cover;
+}
+
+.card h3 {
   margin: 10px;
-  border-radius: 10px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-img {
-  width: 100%;
-  border-radius: 10px;
-}
-
-a {
-  color: cyan;
-  text-decoration: none;
+.card a {
+  margin: 10px;
+  display: inline-block;
+  background: cyan;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: black;
 }

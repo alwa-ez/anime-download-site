@@ -1,22 +1,30 @@
-import { supabase } from './supabase.js'
+const searchInput = document.getElementById('search')
 
-const list = document.getElementById('animeList')
+searchInput.addEventListener('input', () => {
+  const keyword = searchInput.value.toLowerCase()
 
-// VISITOR TRACK
-await supabase.from('visitors').insert([{}])
+  const filtered = data.filter(a =>
+    a.title.toLowerCase().includes(keyword)
+  )
 
-// GET ANIME
-const { data } = await supabase.from('anime').select('*')
+  list.innerHTML = ''
 
-data.forEach(anime => {
-  const div = document.createElement('div')
-  div.className = 'card'
+  filtered.forEach(anime => {
+    const div = document.createElement('div')
+    div.className = 'card'
 
-  div.innerHTML = `
-    <img src="${anime.cover}">
-    <h3>${anime.title}</h3>
-    <a href="detail.html?id=${anime.id}">Lihat</a>
-  `
+    div.innerHTML = `
+      <img src="${anime.cover}">
+      <h3>${anime.title}</h3>
+      <a href="detail.html?id=${anime.id}">Lihat</a>
+    `
 
-  list.appendChild(div)
+    list.appendChild(div)
+  })
 })
+
+const { count } = await supabase
+  .from('visitors')
+  .select('*', { count: 'exact', head: true })
+
+document.getElementById('visitor').innerText = `Visitors: ${count}`
